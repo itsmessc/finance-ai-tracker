@@ -1,0 +1,8 @@
+@import "tailwindcss";
+
+/* Keep global styles minimal to avoid @apply issues in PostCSS */
+html,
+body,
+#root {
+  height: 100%;
+}
