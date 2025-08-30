@@ -1,0 +1,135 @@
+import React from 'react';
+import { motion } from 'framer-motion';
+import {
+    ArrowUpCircle,
+    ArrowDownCircle,
+    Wallet,
+    TrendingUp,
+    TrendingDown
+} from 'lucide-react';
+
+const TransactionSummary = ({ summary, loading }) => {
+    const formatAmount = (amount) => {
+        return new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD'
+        }).format(amount);
+    };
+
+    const getBalanceColor = (balance) => {
+        if (balance > 0) return 'text-green-600';
+        if (balance < 0) return 'text-red-600';
+        return 'text-gray-600';
+    };
+
+    const getBalanceIcon = (balance) => {
+        if (balance > 0) return <TrendingUp size={20} />;
+        if (balance < 0) return <TrendingDown size={20} />;
+        return <Wallet size={20} />;
+    };
+
+    if (loading) {
+        return (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                {[1, 2, 3].map(i => (
+                    <div key={i} className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                        <div className="animate-pulse">
+                            <div className="w-12 h-12 bg-gray-200 rounded-full mb-4"></div>
+                            <div className="w-24 h-4 bg-gray-200 rounded mb-2"></div>
+                            <div className="w-32 h-8 bg-gray-200 rounded"></div>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        );
+    }
+
+    const cards = [
+        {
+            title: 'Total Income',
+            amount: summary.totalCredit,
+            icon: ArrowUpCircle,
+            color: 'text-green-600',
+            bgColor: 'bg-green-100',
+            prefix: '+'
+        },
+        {
+            title: 'Total Expenses',
+            amount: summary.totalDebit,
+            icon: ArrowDownCircle,
+            color: 'text-red-600',
+            bgColor: 'bg-red-100',
+            prefix: '-'
+        },
+        {
+            title: 'Net Balance',
+            amount: summary.balance,
+            icon: () => getBalanceIcon(summary.balance),
+            color: getBalanceColor(summary.balance),
+            bgColor: summary.balance >= 0 ? 'bg-blue-100' : 'bg-orange-100',
+            prefix: summary.balance >= 0 ? '+' : ''
+        }
+    ];
+
+    return (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            {cards.map((card, index) => (
+                <motion.div
+                    key={card.title}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                    className="bg-white rounded-lg shadow-sm border border-gray-200 p-6"
+                >
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <p className="text-sm font-medium text-gray-600 mb-1">
+                                {card.title}
+                            </p>
+                            <p className={`text-2xl font-bold ${card.color}`}>
+                                {card.prefix}{formatAmount(Math.abs(card.amount))}
+                            </p>
+                        </div>
+                        <div className={`p-3 rounded-full ${card.bgColor} ${card.color}`}>
+                            <card.icon />
+                        </div>
+                    </div>
+
+                    {/* Progress bar for expenses vs income */}
+                    {(card.title === 'Total Income' || card.title === 'Total Expenses') && summary.totalCredit > 0 && (
+                        <div className="mt-4">
+                            <div className="w-full bg-gray-200 rounded-full h-2">
+                                <div
+                                    className={`h-2 rounded-full ${card.title === 'Total Income' ? 'bg-green-500' : 'bg-red-500'
+                                        }`}
+                                    style={{
+                                        width: `${Math.min(
+                                            (card.amount / Math.max(summary.totalCredit, summary.totalDebit)) * 100,
+                                            100
+                                        )}%`
+                                    }}
+                                ></div>
+                            </div>
+                            <p className="text-xs text-gray-500 mt-1">
+                                {((card.amount / (summary.totalCredit + summary.totalDebit)) * 100).toFixed(1)}% of total
+                            </p>
+                        </div>
+                    )}
+
+                    {/* Balance status */}
+                    {card.title === 'Net Balance' && (
+                        <div className="mt-4">
+                            <p className="text-xs text-gray-500">
+                                {summary.balance > 0 && 'You have a positive balance!'}
+                                {summary.balance < 0 && 'You have spent more than earned.'}
+                                {summary.balance === 0 && 'Your income and expenses are balanced.'}
+                            </p>
+                        </div>
+                    )}
+                </motion.div>
+            ))}
+        </div>
+    );
+};
+
+export default TransactionSummary;

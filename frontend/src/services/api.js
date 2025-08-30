@@ -1,6 +1,6 @@
 // simple fetch wrapper with automatic refresh on 401
 export async function apiFetch(path, options = {}) {
-    const base = import.meta.env.VITE_API_BASE || ''
+    const base = import.meta.env.VITE_API_BASE || 'http://localhost:4000'
     const url = base + path
     const headers = options.headers || {}
     const accessToken = localStorage.getItem('accessToken')
@@ -27,3 +27,23 @@ export async function apiFetch(path, options = {}) {
         throw err
     }
 }
+
+// Create an axios-like API object for easier use
+const api = {
+    get: (url, config = {}) => apiFetch(url, { method: 'GET', ...config }),
+    post: (url, data, config = {}) => apiFetch(url, { 
+        method: 'POST', 
+        headers: { 'Content-Type': 'application/json', ...config.headers },
+        body: JSON.stringify(data),
+        ...config 
+    }),
+    put: (url, data, config = {}) => apiFetch(url, { 
+        method: 'PUT', 
+        headers: { 'Content-Type': 'application/json', ...config.headers },
+        body: JSON.stringify(data),
+        ...config 
+    }),
+    delete: (url, config = {}) => apiFetch(url, { method: 'DELETE', ...config })
+};
+
+export default api;

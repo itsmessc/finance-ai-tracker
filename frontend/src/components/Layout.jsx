@@ -14,6 +14,7 @@ export default function Layout({ children }) {
                 <div className="font-semibold">Finance AI Tracker</div>
                 <nav className="flex items-center gap-4">
                     {user && <Link to="/" className="text-sm text-slate-700 dark:text-slate-200 hover:underline">Dashboard</Link>}
+                    {user && <Link to="/transactions" className="text-sm text-slate-700 dark:text-slate-200 hover:underline">Transactions</Link>}
                     {user && <Link to="/profile" className="text-sm text-slate-700 dark:text-slate-200 hover:underline">Profile</Link>}
                     {user ? (
                         <button
