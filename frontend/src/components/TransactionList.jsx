@@ -74,80 +74,81 @@ const TransactionList = ({ transactions, onEdit }) => {
     }
 
     return (
-        <div className="space-y-4">
+        <div className="space-y-2 sm:space-y-4">
             {transactions.map((transaction, index) => (
                 <motion.div
                     key={transaction._id}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.05 }}
-                    className="bg-white dark:bg-gray-700 rounded-lg shadow-sm border border-gray-200 dark:border-gray-600 p-4 hover:shadow-md transition-shadow"
+                    className="bg-white dark:bg-gray-700 rounded-lg shadow-sm border border-gray-200 dark:border-gray-600 p-3 sm:p-4 hover:shadow-md transition-shadow"
                 >
                     <div className="flex items-start justify-between">
-                        <div className="flex items-start space-x-3 flex-1">
+                        <div className="flex items-start space-x-3 flex-1 min-w-0">
                             {/* Transaction Type Icon */}
-                            <div className={`flex-shrink-0 p-2 rounded-full ${transaction.type === 'credit'
+                            <div className={`flex-shrink-0 p-1.5 sm:p-2 rounded-full ${transaction.type === 'credit'
                                 ? 'bg-green-100 text-green-600 dark:bg-green-900 dark:text-green-300'
                                 : 'bg-red-100 text-red-600 dark:bg-red-900 dark:text-red-300'
                                 }`}>
                                 {transaction.type === 'credit' ? (
-                                    <ArrowUpCircle size={20} />
+                                    <ArrowUpCircle size={16} className="sm:w-5 sm:h-5" />
                                 ) : (
-                                    <ArrowDownCircle size={20} />
+                                    <ArrowDownCircle size={16} className="sm:w-5 sm:h-5" />
                                 )}
                             </div>
 
                             {/* Transaction Details */}
                             <div className="flex-1 min-w-0">
-                                <div className="flex items-start justify-between">
-                                    <div>
-                                        <h3 className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between">
+                                    <div className="flex-1 min-w-0 mb-2 sm:mb-0">
+                                        <h3 className="text-sm sm:text-base font-medium text-gray-900 dark:text-white truncate">
                                             {transaction.description}
                                         </h3>
-                                        <div className="mt-1 flex items-center space-x-2">
+                                        <div className="mt-1 flex flex-wrap items-center gap-2">
                                             <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getCategoryColor(transaction.category)}`}>
                                                 {transaction.category.charAt(0).toUpperCase() + transaction.category.slice(1)}
                                             </span>
                                             {transaction.parsedFrom && (
                                                 <span className="inline-flex items-center space-x-1 text-xs text-purple-600 bg-purple-50 dark:text-purple-300 dark:bg-purple-900 px-2 py-1 rounded-full">
                                                     <Bot size={10} />
-                                                    <span>AI Parsed</span>
+                                                    <span className="hidden sm:inline">AI Parsed</span>
+                                                    <span className="sm:hidden">AI</span>
                                                 </span>
                                             )}
                                         </div>
                                     </div>
 
                                     {/* Amount */}
-                                    <div className="text-right">
-                                        <div className={`text-lg font-semibold ${transaction.type === 'credit' ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
+                                    <div className="flex flex-row sm:flex-col items-start sm:items-end justify-between sm:justify-start sm:text-right">
+                                        <div className={`text-base sm:text-lg font-semibold ${transaction.type === 'credit' ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
                                             }`}>
                                             {formatAmount(transaction.amount, transaction.type)}
                                         </div>
-                                        <div className="text-xs text-gray-500 dark:text-gray-400">
+                                        <div className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
                                             {format(new Date(transaction.date), 'MMM dd, yyyy')}
                                         </div>
                                     </div>
                                 </div>
 
                                 {/* Additional Info */}
-                                <div className="mt-2 flex flex-wrap items-center gap-4 text-xs text-gray-500 dark:text-gray-400">
+                                <div className="mt-2 flex flex-wrap items-center gap-2 sm:gap-4 text-xs text-gray-500 dark:text-gray-400">
                                     {transaction.location && (
                                         <div className="flex items-center space-x-1">
                                             <MapPin size={12} />
-                                            <span>{transaction.location}</span>
+                                            <span className="truncate max-w-[100px] sm:max-w-none">{transaction.location}</span>
                                         </div>
                                     )}
 
                                     {transaction.tags && transaction.tags.length > 0 && (
                                         <div className="flex items-center space-x-1">
                                             <Tag size={12} />
-                                            <span>{transaction.tags.join(', ')}</span>
+                                            <span className="truncate max-w-[100px] sm:max-w-none">{transaction.tags.join(', ')}</span>
                                         </div>
                                     )}
                                 </div>
 
                                 {transaction.parsedFrom && (
-                                    <div className="mt-2 text-xs text-gray-500 dark:text-gray-400 italic">
+                                    <div className="mt-2 text-xs text-gray-500 dark:text-gray-400 italic truncate">
                                         Originally: "{transaction.parsedFrom}"
                                     </div>
                                 )}
@@ -155,10 +156,10 @@ const TransactionList = ({ transactions, onEdit }) => {
                         </div>
 
                         {/* Actions */}
-                        <div className="relative">
+                        <div className="relative flex-shrink-0">
                             <button
                                 onClick={() => setShowActions(showActions === transaction._id ? null : transaction._id)}
-                                className="p-1 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 rounded-full hover:bg-gray-100 dark:hover:bg-gray-600"
+                                className="p-1.5 sm:p-2 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 rounded-full hover:bg-gray-100 dark:hover:bg-gray-600"
                             >
                                 <MoreHorizontal size={16} />
                             </button>

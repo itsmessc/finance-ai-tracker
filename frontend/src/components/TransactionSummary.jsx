@@ -39,13 +39,13 @@ const TransactionSummary = ({ summary, loading }) => {
 
     if (loading) {
         return (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 mb-4 sm:mb-6">
                 {[1, 2, 3].map(i => (
-                    <div key={i} className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+                    <div key={i} className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 sm:p-6">
                         <div className="animate-pulse">
-                            <div className="w-12 h-12 bg-gray-200 dark:bg-gray-600 rounded-full mb-4"></div>
-                            <div className="w-24 h-4 bg-gray-200 dark:bg-gray-600 rounded mb-2"></div>
-                            <div className="w-32 h-8 bg-gray-200 dark:bg-gray-600 rounded"></div>
+                            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gray-200 dark:bg-gray-600 rounded-full mb-3 sm:mb-4"></div>
+                            <div className="w-20 sm:w-24 h-3 sm:h-4 bg-gray-200 dark:bg-gray-600 rounded mb-2"></div>
+                            <div className="w-28 sm:w-32 h-6 sm:h-8 bg-gray-200 dark:bg-gray-600 rounded"></div>
                         </div>
                     </div>
                 ))}
@@ -81,25 +81,25 @@ const TransactionSummary = ({ summary, loading }) => {
     ];
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 mb-4 sm:mb-6">
             {cards.map((card, index) => (
                 <motion.div
                     key={card.title}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.1 }}
-                    className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6"
+                    className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 sm:p-6"
                 >
                     <div className="flex items-center justify-between">
-                        <div>
-                            <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
+                        <div className="flex-1 min-w-0">
+                            <p className="text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
                                 {card.title}
                             </p>
-                            <p className={`text-2xl font-bold ${card.color}`}>
+                            <p className={`text-lg sm:text-2xl font-bold ${card.color} truncate`}>
                                 {card.prefix}{formatAmount(Math.abs(card.amount))}
                             </p>
                         </div>
-                        <div className={`p-3 rounded-full ${card.bgColor} ${card.color}`}>
+                        <div className={`p-2 sm:p-3 rounded-full ${card.bgColor} ${card.color} flex-shrink-0`}>
                             <card.icon />
                         </div>
                     </div>

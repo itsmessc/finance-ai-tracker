@@ -117,21 +117,21 @@ const Transactions = () => {
 
     return (
         <Layout>
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
                 {/* Header */}
-                <div className="flex items-center justify-between mb-8">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 sm:mb-8 space-y-4 sm:space-y-0">
                     <div>
-                        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Transactions</h1>
-                        <p className="text-gray-600 dark:text-gray-300 mt-2">
+                        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">Transactions</h1>
+                        <p className="text-gray-600 dark:text-gray-300 mt-1 sm:mt-2 text-sm sm:text-base">
                             Track your income and expenses with AI-powered parsing
                         </p>
                     </div>
 
-                    <div className="flex items-center space-x-3">
+                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-2 sm:space-y-0 sm:space-x-3">
                         <button
                             onClick={handleRefresh}
                             disabled={loading.transactions}
-                            className="flex items-center space-x-2 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 bg-white dark:bg-gray-800"
+                            className="flex items-center justify-center space-x-2 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 bg-white dark:bg-gray-800 text-sm"
                         >
                             <RefreshCw
                                 size={16}
@@ -142,7 +142,7 @@ const Transactions = () => {
 
                         <button
                             onClick={handleExport}
-                            className="flex items-center space-x-2 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 bg-white dark:bg-gray-800"
+                            className="flex items-center justify-center space-x-2 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 bg-white dark:bg-gray-800 text-sm"
                         >
                             <Download size={16} />
                             <span>Export</span>
@@ -150,7 +150,7 @@ const Transactions = () => {
 
                         <button
                             onClick={handleAddTransaction}
-                            className="flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 whitespace-nowrap"
+                            className="flex items-center justify-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 text-sm font-medium"
                         >
                             <Plus size={16} />
                             <span>Add Transaction</span>
@@ -170,7 +170,7 @@ const Transactions = () => {
                 {/* Transactions List */}
                 <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
                     {loading.transactions ? (
-                        <div className="p-8">
+                        <div className="p-6 sm:p-8">
                             <div className="flex items-center justify-center">
                                 <RefreshCw className="animate-spin mr-2" size={20} />
                                 <span className="text-gray-900 dark:text-white">Loading transactions...</span>
@@ -178,8 +178,8 @@ const Transactions = () => {
                         </div>
                     ) : (
                         <>
-                            <div className="p-6">
-                                <div className="flex items-center justify-between mb-4">
+                            <div className="p-4 sm:p-6">
+                                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 space-y-2 sm:space-y-0">
                                     <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
                                         Recent Transactions
                                     </h2>
