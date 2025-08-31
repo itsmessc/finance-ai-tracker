@@ -4,12 +4,7 @@ import { motion } from 'framer-motion';
 import { Bot, IndianRupee, Calendar, Tag, MapPin, Loader2, X, Check } from 'lucide-react';
 import { parseTransaction, createTransaction, clearParsedTransaction, clearError } from '../store/slices/transactionSlice';
 import toast from 'react-hot-toast';
-
-const CATEGORIES = [
-    'food', 'transport', 'entertainment', 'utilities', 'healthcare',
-    'education', 'shopping', 'travel', 'investment', 'salary',
-    'freelance', 'business', 'rent', 'insurance', 'other'
-];
+import { CATEGORIES } from '../constants/transactions';
 
 const TransactionForm = ({ isOpen, onClose, transaction = null }) => {
     const dispatch = useDispatch();
@@ -289,9 +284,9 @@ const TransactionForm = ({ isOpen, onClose, transaction = null }) => {
                                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                                 required
                             >
-                                {CATEGORIES.map(cat => (
-                                    <option key={cat} value={cat}>
-                                        {cat.charAt(0).toUpperCase() + cat.slice(1)}
+                                {CATEGORIES.filter(c => c.value !== 'all').map(cat => (
+                                    <option key={cat.value} value={cat.value}>
+                                        {cat.label}
                                     </option>
                                 ))}
                             </select>

@@ -1,19 +1,12 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { motion } from 'framer-motion';
-import { format } from 'date-fns';
-import {
-    Edit3,
-    Trash2,
-    MapPin,
-    Tag,
-    ArrowUpCircle,
-    ArrowDownCircle,
-    MoreHorizontal,
-    Bot
-} from 'lucide-react';
+import { Edit3, Trash2, MapPin, Tag, ArrowUpCircle, ArrowDownCircle, MoreHorizontal, Bot } from 'lucide-react';
 import { deleteTransaction } from '../store/slices/transactionSlice';
 import toast from 'react-hot-toast';
+import { formatAmount, formatDate } from '../utils/formatters';
+import { getCategoryColor } from '../utils/colors';
+import Button from './ui/Button';
 
 const TransactionList = ({ transactions, onEdit }) => {
     const dispatch = useDispatch();
@@ -31,34 +24,9 @@ const TransactionList = ({ transactions, onEdit }) => {
         }
     };
 
-    const formatAmount = (amount, type) => {
-        const formattedAmount = new Intl.NumberFormat('en-IN', {
-            style: 'currency',
-            currency: 'INR'
-        }).format(amount);
-
-        return type === 'credit' ? `+${formattedAmount}` : `-${formattedAmount}`;
-    };
-
-    const getCategoryColor = (category) => {
-        const colors = {
-            food: 'bg-orange-100 text-orange-700 dark:bg-orange-900 dark:text-orange-300',
-            transport: 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300',
-            entertainment: 'bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-300',
-            utilities: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300',
-            healthcare: 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300',
-            education: 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900 dark:text-indigo-300',
-            shopping: 'bg-pink-100 text-pink-700 dark:bg-pink-900 dark:text-pink-300',
-            travel: 'bg-teal-100 text-teal-700 dark:bg-teal-900 dark:text-teal-300',
-            investment: 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300',
-            salary: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-300',
-            freelance: 'bg-cyan-100 text-cyan-700 dark:bg-cyan-900 dark:text-cyan-300',
-            business: 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300',
-            rent: 'bg-amber-100 text-amber-700 dark:bg-amber-900 dark:text-amber-300',
-            insurance: 'bg-slate-100 text-slate-700 dark:bg-slate-700 dark:text-slate-300',
-            other: 'bg-neutral-100 text-neutral-700 dark:bg-neutral-700 dark:text-neutral-300'
-        };
-        return colors[category] || colors.other;
+    const formatAmountWithSign = (amount, type) => {
+        const formatted = formatAmount(amount);
+        return type === 'credit' ? `+${formatted}` : `-${formatted}`;
     };
 
     if (transactions.length === 0) {
@@ -122,10 +90,10 @@ const TransactionList = ({ transactions, onEdit }) => {
                                     <div className="flex flex-row sm:flex-col items-start sm:items-end justify-between sm:justify-start sm:text-right">
                                         <div className={`text-base sm:text-lg font-semibold ${transaction.type === 'credit' ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
                                             }`}>
-                                            {formatAmount(transaction.amount, transaction.type)}
+                                            {formatAmountWithSign(transaction.amount, transaction.type)}
                                         </div>
                                         <div className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
-                                            {format(new Date(transaction.date), 'MMM dd, yyyy')}
+                                            {formatDate(transaction.date)}
                                         </div>
                                     </div>
                                 </div>

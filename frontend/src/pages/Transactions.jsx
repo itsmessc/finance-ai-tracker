@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { motion } from 'framer-motion';
-import { format } from 'date-fns';
 import { Plus, Download, RefreshCw } from 'lucide-react';
 import toast from 'react-hot-toast';
 import Layout from '../components/Layout';
@@ -10,11 +9,11 @@ import TransactionList from '../components/TransactionList';
 import TransactionFilters from '../components/TransactionFilters';
 import TransactionSummary from '../components/TransactionSummary';
 import Pagination from '../components/Pagination';
-import {
-    fetchTransactions,
-    updateFilters,
-    clearError
-} from '../store/slices/transactionSlice';
+import { fetchTransactions, updateFilters, clearError } from '../store/slices/transactionSlice';
+import { formatDate } from '../utils/formatters';
+import Button from '../components/ui/Button';
+import { Card, CardContent } from '../components/ui/Card';
+import { Spinner } from '../components/ui/Spinner';
 
 const Transactions = () => {
     const dispatch = useDispatch();
@@ -102,7 +101,7 @@ const Transactions = () => {
             const link = document.createElement('a');
             const url = URL.createObjectURL(blob);
             link.setAttribute('href', url);
-            link.setAttribute('download', `transactions_${format(new Date(), 'yyyy-MM-dd')}.csv`);
+            link.setAttribute('download', `transactions_${formatDate(new Date(), 'yyyy-MM-dd')}.csv`);
             link.style.visibility = 'hidden';
             document.body.appendChild(link);
             link.click();
@@ -128,33 +127,35 @@ const Transactions = () => {
                     </div>
 
                     <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-2 sm:space-y-0 sm:space-x-3">
-                        <button
+                        <Button
                             onClick={handleRefresh}
                             disabled={loading.transactions}
-                            className="flex items-center justify-center space-x-2 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 bg-white dark:bg-gray-800 text-sm"
+                            variant="secondary"
+                            size="md"
                         >
                             <RefreshCw
                                 size={16}
                                 className={loading.transactions ? 'animate-spin' : ''}
                             />
                             <span>Refresh</span>
-                        </button>
+                        </Button>
 
-                        <button
+                        <Button
                             onClick={handleExport}
-                            className="flex items-center justify-center space-x-2 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 bg-white dark:bg-gray-800 text-sm"
+                            variant="secondary"
+                            size="md"
                         >
                             <Download size={16} />
                             <span>Export</span>
-                        </button>
+                        </Button>
 
-                        <button
+                        <Button
                             onClick={handleAddTransaction}
-                            className="flex items-center justify-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 text-sm font-medium"
+                            size="md"
                         >
                             <Plus size={16} />
                             <span>Add Transaction</span>
-                        </button>
+                        </Button>
                     </div>
                 </div>
 
@@ -168,17 +169,15 @@ const Transactions = () => {
                 <TransactionFilters onApplyFilters={handleApplyFilters} />
 
                 {/* Transactions List */}
-                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
-                    {loading.transactions ? (
-                        <div className="p-6 sm:p-8">
-                            <div className="flex items-center justify-center">
-                                <RefreshCw className="animate-spin mr-2" size={20} />
-                                <span className="text-gray-900 dark:text-white">Loading transactions...</span>
+                <Card>
+                    <CardContent>
+                        {loading.transactions ? (
+                            <div className="p-6 sm:p-8 flex items-center justify-center">
+                                <Spinner size="md" />
+                                <span className="ml-2 text-gray-900 dark:text-white">Loading transactions...</span>
                             </div>
-                        </div>
-                    ) : (
-                        <>
-                            <div className="p-4 sm:p-6">
+                        ) : (
+                            <>
                                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 space-y-2 sm:space-y-0">
                                     <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
                                         Recent Transactions
@@ -194,21 +193,21 @@ const Transactions = () => {
                                     transactions={transactions}
                                     onEdit={handleEditTransaction}
                                 />
-                            </div>
+                            </>
+                        )}
+                    </CardContent>
 
-                            {/* Pagination */}
-                            {pagination.total > 1 && (
-                                <Pagination
-                                    currentPage={pagination.current}
-                                    totalPages={pagination.total}
-                                    totalRecords={pagination.totalRecords}
-                                    recordsPerPage={filters.limit}
-                                    onPageChange={handlePageChange}
-                                />
-                            )}
-                        </>
+                    {/* Pagination */}
+                    {!loading.transactions && pagination.total > 1 && (
+                        <Pagination
+                            currentPage={pagination.current}
+                            totalPages={pagination.total}
+                            totalRecords={pagination.totalRecords}
+                            recordsPerPage={filters.limit}
+                            onPageChange={handlePageChange}
+                        />
                     )}
-                </div>
+                </Card>
 
                 {/* Transaction Form Modal */}
                 <TransactionForm
