@@ -217,4 +217,310 @@ async function generateAIInsights(data) {
     };
 }
 
+// Get transaction statistics for analytics
+router.get('/stats', authenticate, async (req, res) => {
+    try {
+        const { period = 'month' } = req.query;
+
+        let dateFilter = {};
+        const now = new Date();
+
+        switch (period) {
+            case 'week':
+                dateFilter = {
+                    date: { $gte: new Date(now.setDate(now.getDate() - 7)) }
+                };
+                break;
+            case 'month':
+                dateFilter = {
+                    date: { $gte: new Date(now.getFullYear(), now.getMonth(), 1) }
+                };
+                break;
+            case 'year':
+                dateFilter = {
+                    date: { $gte: new Date(now.getFullYear(), 0, 1) }
+                };
+                break;
+        }
+
+        const filter = { user: req.user.id, ...dateFilter };
+
+        const [categoryStats, monthlyStats] = await Promise.all([
+            // Category-wise statistics
+            Transaction.aggregate([
+                { $match: filter },
+                {
+                    $group: {
+                        _id: { category: '$category', type: '$type' },
+                        total: { $sum: '$amount' },
+                        count: { $sum: 1 }
+                    }
+                },
+                { $sort: { total: -1 } }
+            ]),
+
+            // Monthly statistics for the last 6 months
+            Transaction.aggregate([
+                {
+                    $match: {
+                        user: req.user.id,
+                        date: { $gte: new Date(now.setMonth(now.getMonth() - 6)) }
+                    }
+                },
+                {
+                    $group: {
+                        _id: {
+                            month: { $month: '$date' },
+                            year: { $year: '$date' },
+                            type: '$type'
+                        },
+                        total: { $sum: '$amount' }
+                    }
+                },
+                { $sort: { '_id.year': 1, '_id.month': 1 } }
+            ])
+        ]);
+
+        res.json({
+            success: true,
+            data: {
+                categoryStats,
+                monthlyStats
+            }
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+});
+
+// Get comprehensive analytics dashboard data
+router.get('/dashboard', authenticate, async (req, res) => {
+    try {
+        const { period = '30' } = req.query;
+        const periodDays = parseInt(period);
+
+        // Calculate date range
+        const now = new Date();
+        const startDate = new Date(now.getTime() - (periodDays * 24 * 60 * 60 * 1000));
+
+        // Fetch transactions for the period
+        const transactions = await Transaction.find({
+            user: req.user.id,
+            date: { $gte: startDate, $lte: now }
+        }).sort({ date: -1 });
+
+        // Calculate basic metrics
+        const totalIncome = transactions
+            .filter(t => t.type === 'credit')
+            .reduce((sum, t) => sum + t.amount, 0);
+
+        const totalExpense = transactions
+            .filter(t => t.type === 'debit')
+            .reduce((sum, t) => sum + t.amount, 0);
+
+        const netBalance = totalIncome - totalExpense;
+
+        // Daily spending trends
+        const dailySpending = {};
+        const dailyIncome = {};
+
+        transactions.forEach(transaction => {
+            const date = transaction.date.toISOString().split('T')[0];
+
+            if (transaction.type === 'debit') {
+                dailySpending[date] = (dailySpending[date] || 0) + transaction.amount;
+            } else {
+                dailyIncome[date] = (dailyIncome[date] || 0) + transaction.amount;
+            }
+        });
+
+        // Category breakdown
+        const categoryBreakdown = {};
+        transactions.forEach(transaction => {
+            const category = transaction.category || 'Other';
+            if (!categoryBreakdown[category]) {
+                categoryBreakdown[category] = { income: 0, expense: 0, net: 0 };
+            }
+
+            if (transaction.type === 'credit') {
+                categoryBreakdown[category].income += transaction.amount;
+            } else {
+                categoryBreakdown[category].expense += transaction.amount;
+            }
+            categoryBreakdown[category].net = categoryBreakdown[category].income - categoryBreakdown[category].expense;
+        });
+
+        // Recent transactions (last 10)
+        const recentTransactions = transactions.slice(0, 10);
+
+        // Calculate trends (compare with previous period)
+        const previousStartDate = new Date(startDate.getTime() - (periodDays * 24 * 60 * 60 * 1000));
+        const previousTransactions = await Transaction.find({
+            user: req.user.id,
+            date: { $gte: previousStartDate, $lt: startDate }
+        });
+
+        const previousTotalExpense = previousTransactions
+            .filter(t => t.type === 'debit')
+            .reduce((sum, t) => sum + t.amount, 0);
+
+        const previousTotalIncome = previousTransactions
+            .filter(t => t.type === 'credit')
+            .reduce((sum, t) => sum + t.amount, 0);
+
+        const expenseTrend = previousTotalExpense > 0 ?
+            ((totalExpense - previousTotalExpense) / previousTotalExpense) * 100 : 0;
+        const incomeTrend = previousTotalIncome > 0 ?
+            ((totalIncome - previousTotalIncome) / previousTotalIncome) * 100 : 0;
+
+        res.json({
+            success: true,
+            data: {
+                summary: {
+                    totalIncome,
+                    totalExpense,
+                    netBalance,
+                    transactionCount: transactions.length,
+                    avgDailySpending: totalExpense / periodDays,
+                    avgDailyIncome: totalIncome / periodDays
+                },
+                trends: {
+                    expenseTrend,
+                    incomeTrend,
+                    netTrend: incomeTrend - expenseTrend
+                },
+                categoryBreakdown,
+                dailySpending,
+                dailyIncome,
+                recentTransactions,
+                period: periodDays
+            }
+        });
+
+    } catch (error) {
+        console.error('Error generating dashboard analytics:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to generate dashboard analytics',
+            error: error.message
+        });
+    }
+});
+
+// Get detailed spending patterns analysis
+router.get('/patterns', authenticate, async (req, res) => {
+    try {
+        const { period = '90', category } = req.query;
+        const periodDays = parseInt(period);
+
+        // Calculate date range
+        const now = new Date();
+        const startDate = new Date(now.getTime() - (periodDays * 24 * 60 * 60 * 1000));
+
+        let filter = {
+            user: req.user.id,
+            date: { $gte: startDate, $lte: now }
+        };
+
+        // Add category filter if specified
+        if (category && category !== 'all') {
+            filter.category = category;
+        }
+
+        // Aggregate spending patterns by day of week
+        const dayOfWeekPattern = await Transaction.aggregate([
+            { $match: filter },
+            {
+                $group: {
+                    _id: { $dayOfWeek: '$date' },
+                    totalAmount: { $sum: '$amount' },
+                    count: { $sum: 1 },
+                    avgAmount: { $avg: '$amount' }
+                }
+            },
+            { $sort: { '_id': 1 } }
+        ]);
+
+        // Aggregate spending patterns by hour (if we have time data)
+        const hourlyPattern = await Transaction.aggregate([
+            { $match: filter },
+            {
+                $group: {
+                    _id: { $hour: '$date' },
+                    totalAmount: { $sum: '$amount' },
+                    count: { $sum: 1 },
+                    avgAmount: { $avg: '$amount' }
+                }
+            },
+            { $sort: { '_id': 1 } }
+        ]);
+
+        // Monthly trends over the period
+        const monthlyTrends = await Transaction.aggregate([
+            { $match: filter },
+            {
+                $group: {
+                    _id: {
+                        year: { $year: '$date' },
+                        month: { $month: '$date' },
+                        type: '$type'
+                    },
+                    totalAmount: { $sum: '$amount' },
+                    count: { $sum: 1 }
+                }
+            },
+            { $sort: { '_id.year': 1, '_id.month': 1 } }
+        ]);
+
+        // Category patterns (top categories by frequency and amount)
+        const categoryPatterns = await Transaction.aggregate([
+            { $match: filter },
+            {
+                $group: {
+                    _id: '$category',
+                    totalAmount: { $sum: '$amount' },
+                    count: { $sum: 1 },
+                    avgAmount: { $avg: '$amount' },
+                    minAmount: { $min: '$amount' },
+                    maxAmount: { $max: '$amount' }
+                }
+            },
+            { $sort: { totalAmount: -1 } }
+        ]);
+
+        // Format day of week data
+        const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        const formattedDayPattern = dayOfWeekPattern.map(item => ({
+            day: dayNames[item._id - 1],
+            dayNumber: item._id,
+            totalAmount: item.totalAmount,
+            count: item.count,
+            avgAmount: item.avgAmount
+        }));
+
+        res.json({
+            success: true,
+            data: {
+                dayOfWeekPattern: formattedDayPattern,
+                hourlyPattern,
+                monthlyTrends,
+                categoryPatterns,
+                period: periodDays,
+                category: category || 'all'
+            }
+        });
+
+    } catch (error) {
+        console.error('Error analyzing spending patterns:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to analyze spending patterns',
+            error: error.message
+        });
+    }
+});
+
 module.exports = router;

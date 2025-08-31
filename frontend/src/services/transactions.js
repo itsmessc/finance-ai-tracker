@@ -82,7 +82,7 @@ export const transactionService = {
     // Get transaction statistics
     getTransactionStats: async (period = 'month') => {
         try {
-            const response = await api.get(`/api/transactions/stats?period=${period}`);
+            const response = await api.get(`/analytics/stats?period=${period}`);
             const data = await response.json();
             if (!response.ok) {
                 throw new Error(data.message || 'Failed to fetch statistics');
