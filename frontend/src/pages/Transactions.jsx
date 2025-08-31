@@ -85,8 +85,8 @@ const Transactions = () => {
                 {/* Header */}
                 <div className="flex items-center justify-between mb-8">
                     <div>
-                        <h1 className="text-3xl font-bold text-gray-900">Transactions</h1>
-                        <p className="text-gray-600 mt-2">
+                        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Transactions</h1>
+                        <p className="text-gray-600 dark:text-gray-300 mt-2">
                             Track your income and expenses with AI-powered parsing
                         </p>
                     </div>
@@ -95,7 +95,7 @@ const Transactions = () => {
                         <button
                             onClick={handleRefresh}
                             disabled={loading.transactions}
-                            className="flex items-center space-x-2 px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 disabled:opacity-50"
+                            className="flex items-center space-x-2 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 bg-white dark:bg-gray-800"
                         >
                             <RefreshCw
                                 size={16}
@@ -106,7 +106,7 @@ const Transactions = () => {
 
                         <button
                             onClick={handleExport}
-                            className="flex items-center space-x-2 px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50"
+                            className="flex items-center space-x-2 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 bg-white dark:bg-gray-800"
                         >
                             <Download size={16} />
                             <span>Export</span>
@@ -132,23 +132,23 @@ const Transactions = () => {
                 <TransactionFilters onApplyFilters={handleApplyFilters} />
 
                 {/* Transactions List */}
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
                     {loading.transactions ? (
                         <div className="p-8">
                             <div className="flex items-center justify-center">
                                 <RefreshCw className="animate-spin mr-2" size={20} />
-                                <span>Loading transactions...</span>
+                                <span className="text-gray-900 dark:text-white">Loading transactions...</span>
                             </div>
                         </div>
                     ) : (
                         <>
                             <div className="p-6">
                                 <div className="flex items-center justify-between mb-4">
-                                    <h2 className="text-lg font-semibold text-gray-900">
+                                    <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
                                         Recent Transactions
                                     </h2>
                                     {pagination.totalRecords > 0 && (
-                                        <span className="text-sm text-gray-500">
+                                        <span className="text-sm text-gray-500 dark:text-gray-400">
                                             {pagination.totalRecords} transaction{pagination.totalRecords !== 1 ? 's' : ''} found
                                         </span>
                                     )}
@@ -187,14 +187,20 @@ const Transactions = () => {
                     toastOptions={{
                         duration: 4000,
                         style: {
-                            background: '#363636',
-                            color: '#fff',
+                            background: 'var(--toast-bg, #363636)',
+                            color: 'var(--toast-color, #fff)',
                         },
                         success: {
                             duration: 3000,
-                            theme: {
-                                primary: 'green',
-                                secondary: 'black',
+                            style: {
+                                background: 'var(--toast-success-bg, #10b981)',
+                                color: 'var(--toast-success-color, #fff)',
+                            },
+                        },
+                        error: {
+                            style: {
+                                background: 'var(--toast-error-bg, #ef4444)',
+                                color: 'var(--toast-error-color, #fff)',
                             },
                         },
                     }}

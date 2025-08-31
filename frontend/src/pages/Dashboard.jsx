@@ -112,8 +112,8 @@ export default function Dashboard() {
 
                     {loading.transactions ? (
                         <div className="flex items-center justify-center py-8">
-                            <Activity className="animate-pulse text-gray-400" size={24} />
-                            <span className="ml-2 text-gray-500">Loading transactions...</span>
+                            <Activity className="animate-pulse text-gray-400 dark:text-gray-500" size={24} />
+                            <span className="ml-2 text-gray-500 dark:text-gray-400">Loading transactions...</span>
                         </div>
                     ) : transactions.length > 0 ? (
                         <div className="space-y-3">
@@ -127,7 +127,9 @@ export default function Dashboard() {
                                             {transaction.category} • {new Date(transaction.date).toLocaleDateString()}
                                         </p>
                                     </div>
-                                    <div className={`font-semibold ${transaction.type === 'credit' ? 'text-green-600' : 'text-red-600'
+                                    <div className={`font-semibold ${transaction.type === 'credit'
+                                        ? 'text-green-600 dark:text-green-400'
+                                        : 'text-red-600 dark:text-red-400'
                                         }`}>
                                         {formatAmount(transaction.amount, transaction.type)}
                                     </div>
@@ -136,14 +138,14 @@ export default function Dashboard() {
                         </div>
                     ) : (
                         <div className="text-center py-8">
-                            <div className="text-gray-400 mb-2">
+                            <div className="text-gray-400 dark:text-gray-500 mb-2">
                                 <Activity size={48} className="mx-auto" />
                             </div>
                             <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No transactions yet</h3>
                             <p className="text-gray-500 dark:text-gray-400 mb-4">Start tracking your finances today!</p>
                             <Link
                                 to="/transactions"
-                                className="inline-flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+                                className="inline-flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition-colors"
                             >
                                 <Plus size={16} />
                                 <span>Add your first transaction</span>

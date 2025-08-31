@@ -39,8 +39,11 @@ async function exchangeIdTokenForTokens(idToken) {
     const user = await findOrCreateUserFromPayload(payload);
     const accessToken = signAccessToken(user);
     const refreshToken = signRefreshToken(user);
-    // persist refresh token with expiry
+    
+    // Clean up old refresh tokens for this user before creating new one
     try {
+        await RefreshToken.deleteMany({ user: user._id });
+        
         const decoded = jwt.decode(refreshToken);
         const expiresAt = decoded ? new Date(decoded.exp * 1000) : null;
         await RefreshToken.create({ token: refreshToken, user: user._id, expiresAt });
@@ -77,6 +80,19 @@ async function getProfileFromAccessToken(accessToken) {
     return user;
 }
 
+async function cleanupExpiredTokens() {
+    try {
+        const result = await RefreshToken.deleteMany({ 
+            expiresAt: { $lt: new Date() } 
+        });
+        console.log(`Cleaned up ${result.deletedCount} expired refresh tokens`);
+        return result.deletedCount;
+    } catch (err) {
+        console.error('Failed to cleanup expired tokens', err);
+        return 0;
+    }
+}
+
 module.exports = {
     verifyGoogleIdToken,
     findOrCreateUserFromPayload,
@@ -86,4 +102,5 @@ module.exports = {
     refreshAccessToken,
     revokeRefreshToken,
     getProfileFromAccessToken,
+    cleanupExpiredTokens,
 };

@@ -31,17 +31,17 @@ export async function apiFetch(path, options = {}) {
 // Create an axios-like API object for easier use
 const api = {
     get: (url, config = {}) => apiFetch(url, { method: 'GET', ...config }),
-    post: (url, data, config = {}) => apiFetch(url, { 
-        method: 'POST', 
+    post: (url, data, config = {}) => apiFetch(url, {
+        method: 'POST',
         headers: { 'Content-Type': 'application/json', ...config.headers },
         body: JSON.stringify(data),
-        ...config 
+        ...config
     }),
-    put: (url, data, config = {}) => apiFetch(url, { 
-        method: 'PUT', 
+    put: (url, data, config = {}) => apiFetch(url, {
+        method: 'PUT',
         headers: { 'Content-Type': 'application/json', ...config.headers },
         body: JSON.stringify(data),
-        ...config 
+        ...config
     }),
     delete: (url, config = {}) => apiFetch(url, { method: 'DELETE', ...config })
 };

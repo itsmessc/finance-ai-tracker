@@ -50,7 +50,8 @@ const TransactionForm = ({ isOpen, onClose, transaction = null }) => {
                 category: parsedTransaction.category || 'other',
                 description: parsedTransaction.description || '',
                 tags: parsedTransaction.tags || [],
-                location: parsedTransaction.location || ''
+                location: parsedTransaction.location || '',
+                date: parsedTransaction.date || new Date().toISOString().split('T')[0]
             }));
             setUseAI(false);
             setNaturalText('');
@@ -166,8 +167,8 @@ const TransactionForm = ({ isOpen, onClose, transaction = null }) => {
                                     type="button"
                                     onClick={() => setUseAI(false)}
                                     className={`px-3 py-1 rounded-md text-sm ${!useAI
-                                            ? 'bg-blue-100 text-blue-700 border border-blue-300 dark:bg-blue-900 dark:text-blue-300 dark:border-blue-600'
-                                            : 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300'
+                                        ? 'bg-blue-100 text-blue-700 border border-blue-300 dark:bg-blue-900 dark:text-blue-300 dark:border-blue-600'
+                                        : 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300'
                                         }`}
                                 >
                                     Manual
@@ -176,8 +177,8 @@ const TransactionForm = ({ isOpen, onClose, transaction = null }) => {
                                     type="button"
                                     onClick={() => setUseAI(true)}
                                     className={`px-3 py-1 rounded-md text-sm flex items-center space-x-1 ${useAI
-                                            ? 'bg-purple-100 text-purple-700 border border-purple-300 dark:bg-purple-900 dark:text-purple-300 dark:border-purple-600'
-                                            : 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300'
+                                        ? 'bg-purple-100 text-purple-700 border border-purple-300 dark:bg-purple-900 dark:text-purple-300 dark:border-purple-600'
+                                        : 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300'
                                         }`}
                                 >
                                     <Bot size={14} />
@@ -258,8 +259,8 @@ const TransactionForm = ({ isOpen, onClose, transaction = null }) => {
                                     type="button"
                                     onClick={() => setFormData(prev => ({ ...prev, type: 'debit' }))}
                                     className={`p-2 rounded-md text-sm font-medium ${formData.type === 'debit'
-                                            ? 'bg-red-100 text-red-700 border border-red-300 dark:bg-red-900 dark:text-red-300 dark:border-red-600'
-                                            : 'bg-gray-100 text-gray-600 border border-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600'
+                                        ? 'bg-red-100 text-red-700 border border-red-300 dark:bg-red-900 dark:text-red-300 dark:border-red-600'
+                                        : 'bg-gray-100 text-gray-600 border border-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600'
                                         }`}
                                 >
                                     Expense (Debit)
@@ -268,8 +269,8 @@ const TransactionForm = ({ isOpen, onClose, transaction = null }) => {
                                     type="button"
                                     onClick={() => setFormData(prev => ({ ...prev, type: 'credit' }))}
                                     className={`p-2 rounded-md text-sm font-medium ${formData.type === 'credit'
-                                            ? 'bg-green-100 text-green-700 border border-green-300 dark:bg-green-900 dark:text-green-300 dark:border-green-600'
-                                            : 'bg-gray-100 text-gray-600 border border-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600'
+                                        ? 'bg-green-100 text-green-700 border border-green-300 dark:bg-green-900 dark:text-green-300 dark:border-green-600'
+                                        : 'bg-gray-100 text-gray-600 border border-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600'
                                         }`}
                                 >
                                     Income (Credit)

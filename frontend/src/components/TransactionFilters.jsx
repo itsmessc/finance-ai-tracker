@@ -94,23 +94,23 @@ const TransactionFilters = ({ onApplyFilters }) => {
     };
 
     return (
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 mb-6">
             {/* Basic Filters */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                 {/* Search */}
                 <div className="relative">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500" size={16} />
                     <input
                         type="text"
                         placeholder="Search transactions..."
                         value={localFilters.search}
                         onChange={(e) => handleFilterChange('search', e.target.value)}
-                        className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                     />
                     {localFilters.search && (
                         <button
                             onClick={() => handleFilterChange('search', '')}
-                            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300"
                         >
                             <X size={16} />
                         </button>
@@ -119,11 +119,11 @@ const TransactionFilters = ({ onApplyFilters }) => {
 
                 {/* Transaction Type */}
                 <div className="relative">
-                    <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
+                    <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500" size={16} />
                     <select
                         value={localFilters.type}
                         onChange={(e) => handleFilterChange('type', e.target.value)}
-                        className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                     >
                         {TRANSACTION_TYPES.map(type => (
                             <option key={type.value} value={type.value}>
@@ -135,11 +135,11 @@ const TransactionFilters = ({ onApplyFilters }) => {
 
                 {/* Category */}
                 <div className="relative">
-                    <TagIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
+                    <TagIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500" size={16} />
                     <select
                         value={localFilters.category}
                         onChange={(e) => handleFilterChange('category', e.target.value)}
-                        className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                     >
                         {CATEGORIES.map(category => (
                             <option key={category.value} value={category.value}>
@@ -154,7 +154,7 @@ const TransactionFilters = ({ onApplyFilters }) => {
             <div className="flex items-center justify-between">
                 <button
                     onClick={() => setShowAdvanced(!showAdvanced)}
-                    className="flex items-center space-x-2 text-sm text-blue-600 hover:text-blue-700"
+                    className="flex items-center space-x-2 text-sm text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
                 >
                     <Filter size={16} />
                     <span>{showAdvanced ? 'Hide' : 'Show'} Advanced Filters</span>
@@ -164,7 +164,7 @@ const TransactionFilters = ({ onApplyFilters }) => {
                     {hasActiveFilters() && (
                         <button
                             onClick={handleReset}
-                            className="flex items-center space-x-1 px-3 py-1 text-xs text-gray-600 bg-gray-100 rounded-md hover:bg-gray-200"
+                            className="flex items-center space-x-1 px-3 py-1 text-xs text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600"
                         >
                             <RotateCcw size={12} />
                             <span>Reset</span>
@@ -179,50 +179,50 @@ const TransactionFilters = ({ onApplyFilters }) => {
                     initial={{ opacity: 0, height: 0 }}
                     animate={{ opacity: 1, height: 'auto' }}
                     exit={{ opacity: 0, height: 0 }}
-                    className="mt-4 pt-4 border-t border-gray-200"
+                    className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700"
                 >
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         {/* Date Range */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 Start Date
                             </label>
                             <div className="relative">
-                                <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
+                                <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500" size={16} />
                                 <input
                                     type="date"
                                     value={localFilters.startDate || ''}
                                     onChange={(e) => handleFilterChange('startDate', e.target.value || null)}
-                                    className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                                 />
                             </div>
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 End Date
                             </label>
                             <div className="relative">
-                                <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
+                                <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500" size={16} />
                                 <input
                                     type="date"
                                     value={localFilters.endDate || ''}
                                     onChange={(e) => handleFilterChange('endDate', e.target.value || null)}
-                                    className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                                 />
                             </div>
                         </div>
 
                         {/* Sort Options */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 Sort By
                             </label>
                             <div className="flex space-x-2">
                                 <select
                                     value={localFilters.sortBy}
                                     onChange={(e) => handleFilterChange('sortBy', e.target.value)}
-                                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                                 >
                                     {SORT_OPTIONS.map(option => (
                                         <option key={option.value} value={option.value}>
@@ -233,7 +233,7 @@ const TransactionFilters = ({ onApplyFilters }) => {
                                 <select
                                     value={localFilters.sortOrder}
                                     onChange={(e) => handleFilterChange('sortOrder', e.target.value)}
-                                    className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                                 >
                                     <option value="desc">Desc</option>
                                     <option value="asc">Asc</option>

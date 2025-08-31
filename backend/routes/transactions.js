@@ -1,4 +1,5 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const Transaction = require('../models/Transaction');
 const aiParser = require('../services/aiParser');
 const { authenticate } = require('../middleware/auth');
@@ -37,7 +38,7 @@ router.post('/parse', authenticate, async (req, res) => {
 // Create transaction
 router.post('/', authenticate, async (req, res) => {
     try {
-        const { amount, type, category, description, tags, location, parsedFrom } = req.body;
+        const { amount, type, category, description, date, tags, location, parsedFrom } = req.body;
 
         // Validate required fields
         if (!amount || !type || !category || !description) {
@@ -53,6 +54,7 @@ router.post('/', authenticate, async (req, res) => {
             type: type.toLowerCase(),
             category: category.toLowerCase(),
             description,
+            date: date ? new Date(date) : new Date(), // Use provided date or current date
             tags: tags || [],
             location: location || null,
             parsedFrom: parsedFrom || null
@@ -89,6 +91,19 @@ router.get('/', authenticate, async (req, res) => {
         } = req.query;
 
         const filter = { user: req.user.id };
+
+        console.log('User ID from token:', req.user.id);
+        console.log('Filter for query:', filter);
+
+        // First, let's see all transactions for this user without filters
+        const allUserTransactions = await Transaction.find({ user: req.user.id });
+        console.log('All user transactions:', allUserTransactions.length);
+        console.log('Sample transactions:', allUserTransactions.slice(0, 2).map(t => ({
+            id: t._id,
+            amount: t.amount,
+            type: t.type,
+            user: t.user
+        })));
 
         // Apply filters
         if (type && type !== 'all') {
@@ -131,9 +146,42 @@ router.get('/', authenticate, async (req, res) => {
             Transaction.countDocuments(filter)
         ]);
 
-        // Calculate totals
+        console.log('Found transactions count:', transactions.length);
+        console.log('Total transactions:', total);
+        console.log('Sample transaction:', transactions[0]);
+
+        // Calculate totals using the same filter but ensuring proper ObjectId comparison
+        const aggregationFilter = { user: new mongoose.Types.ObjectId(req.user.id) };
+
+        // Apply the same additional filters to aggregation
+        if (type && type !== 'all') {
+            aggregationFilter.type = type;
+        }
+
+        if (category && category !== 'all') {
+            aggregationFilter.category = category;
+        }
+
+        if (startDate || endDate) {
+            aggregationFilter.date = {};
+            if (startDate) {
+                aggregationFilter.date.$gte = new Date(startDate);
+            }
+            if (endDate) {
+                aggregationFilter.date.$lte = new Date(endDate);
+            }
+        }
+
+        if (search) {
+            aggregationFilter.$or = [
+                { description: { $regex: search, $options: 'i' } },
+                { tags: { $in: [new RegExp(search, 'i')] } },
+                { location: { $regex: search, $options: 'i' } }
+            ];
+        }
+
         const totals = await Transaction.aggregate([
-            { $match: filter },
+            { $match: aggregationFilter },
             {
                 $group: {
                     _id: '$type',
@@ -142,9 +190,14 @@ router.get('/', authenticate, async (req, res) => {
             }
         ]);
 
+        console.log('Aggregation filter:', aggregationFilter);
+        console.log('Aggregation totals result:', totals);
+
         const totalCredit = totals.find(t => t._id === 'credit')?.total || 0;
         const totalDebit = totals.find(t => t._id === 'debit')?.total || 0;
         const balance = totalCredit - totalDebit;
+
+        console.log('Final calculated totals:', { totalCredit, totalDebit, balance });
 
         res.json({
             success: true,
