@@ -5,7 +5,6 @@ const cors = require('cors');
 
 const authRoutes = require('./routes/auth');
 const transactionRoutes = require('./routes/transactions');
-const { cleanupExpiredTokens } = require('./actions/authActions');
 
 const app = express();
 app.use(cors());
@@ -21,13 +20,6 @@ const PORT = process.env.PORT || 4000;
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/finance-ai-tracker')
     .then(() => {
         console.log('Connected to MongoDB');
-        
-        // Clean up expired tokens on startup
-        cleanupExpiredTokens();
-        
-        // Set up periodic cleanup (every 24 hours)
-        setInterval(cleanupExpiredTokens, 24 * 60 * 60 * 1000);
-        
         app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
     })
     .catch(err => {
