@@ -13,6 +13,7 @@ body,
     transform: translate3d(0, -200%, 0) scale(0.6);
     opacity: 0;
   }
+
   100% {
     transform: translate3d(0, 0, 0) scale(1);
     opacity: 1;
@@ -24,6 +25,7 @@ body,
     transform: translate3d(0, 0, 0) scale(1);
     opacity: 1;
   }
+
   100% {
     transform: translate3d(0, -150%, 0) scale(0.6);
     opacity: 0;
@@ -37,7 +39,7 @@ body,
 
 /* Dark mode support for toasts */
 @media (prefers-color-scheme: dark) {
-  .react-hot-toast > div {
+  .react-hot-toast>div {
     background: rgb(31 41 55) !important;
     color: rgb(243 244 246) !important;
     border-color: rgb(75 85 99) !important;

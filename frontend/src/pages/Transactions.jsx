@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { motion } from 'framer-motion';
+import { format } from 'date-fns';
 import { Plus, Download, RefreshCw } from 'lucide-react';
+import toast from 'react-hot-toast';
 import Layout from '../components/Layout';
 import TransactionForm from '../components/TransactionForm';
 import TransactionList from '../components/TransactionList';
@@ -74,8 +76,43 @@ const Transactions = () => {
     };
 
     const handleExport = () => {
-        // TODO: Implement export functionality
-        console.log('Export transactions');
+        if (!transactions || transactions.length === 0) {
+            toast.error('No transactions to export');
+            return;
+        }
+
+        try {
+            // Create CSV content
+            const headers = ['Date', 'Description', 'Category', 'Type', 'Amount', 'Location', 'Tags'];
+            const csvContent = [
+                headers.join(','),
+                ...transactions.map(transaction => [
+                    format(new Date(transaction.date), 'yyyy-MM-dd'),
+                    `"${transaction.description.replace(/"/g, '""')}"`, // Escape quotes
+                    transaction.category,
+                    transaction.type,
+                    transaction.amount,
+                    `"${(transaction.location || '').replace(/"/g, '""')}"`,
+                    `"${(transaction.tags || []).join('; ').replace(/"/g, '""')}"`
+                ].join(','))
+            ].join('\n');
+
+            // Create and download file
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', `transactions_${format(new Date(), 'yyyy-MM-dd')}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            toast.success(`Exported ${transactions.length} transactions to CSV`);
+        } catch (error) {
+            console.error('Export error:', error);
+            toast.error('Failed to export transactions');
+        }
     };
 
     return (
