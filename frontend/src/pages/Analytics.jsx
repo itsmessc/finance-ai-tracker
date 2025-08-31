@@ -184,7 +184,14 @@ export default function Analytics() {
         setAiLoading(true);
         try {
             const response = await api.get(`/analytics/insights?period=${selectedPeriod}`);
-            setAiInsights(response.data.data.aiInsights);
+            const responseData = await response.json();
+
+            if (responseData.success && responseData.data && responseData.data.aiInsights) {
+                setAiInsights(responseData.data.aiInsights);
+            } else {
+                console.error('Invalid response structure:', responseData);
+                generateFallbackInsights();
+            }
         } catch (error) {
             console.error('Error fetching AI insights:', error);
             // Generate fallback insights
@@ -476,8 +483,8 @@ export default function Analytics() {
                                 key={period.value}
                                 onClick={() => setSelectedPeriod(period.value)}
                                 className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${selectedPeriod === period.value
-                                        ? 'bg-blue-600 text-white'
-                                        : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                                    ? 'bg-blue-600 text-white'
+                                    : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
                                     }`}
                             >
                                 {period.label}
@@ -547,8 +554,8 @@ export default function Analytics() {
                             <div>
                                 <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Net Balance</p>
                                 <p className={`text-2xl font-bold ${analyticsData.netBalance >= 0
-                                        ? 'text-green-600 dark:text-green-400'
-                                        : 'text-red-600 dark:text-red-400'
+                                    ? 'text-green-600 dark:text-green-400'
+                                    : 'text-red-600 dark:text-red-400'
                                     }`}>
                                     {formatCurrency(analyticsData.netBalance)}
                                 </p>

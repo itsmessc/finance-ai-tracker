@@ -5,6 +5,7 @@ const cors = require('cors');
 
 const authRoutes = require('./routes/auth');
 const transactionRoutes = require('./routes/transactions');
+const analyticsRoutes = require('./routes/analytics');
 
 const app = express();
 app.use(cors());
@@ -12,6 +13,7 @@ app.use(express.json());
 
 app.use('/auth', authRoutes);
 app.use('/api/transactions', transactionRoutes);
+app.use('/analytics', analyticsRoutes);
 
 app.get('/', (req, res) => res.json({ ok: true, message: 'Finance AI Tracker backend' }));
 
