@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { motion } from 'framer-motion';
 import { Plus, Download, RefreshCw } from 'lucide-react';
-import { Toaster } from 'react-hot-toast';
 import Layout from '../components/Layout';
 import TransactionForm from '../components/TransactionForm';
 import TransactionList from '../components/TransactionList';
@@ -179,31 +178,6 @@ const Transactions = () => {
                     isOpen={showForm}
                     onClose={handleCloseForm}
                     transaction={editingTransaction}
-                />
-
-                {/* Toast Notifications */}
-                <Toaster
-                    position="top-right"
-                    toastOptions={{
-                        duration: 4000,
-                        style: {
-                            background: 'var(--toast-bg, #363636)',
-                            color: 'var(--toast-color, #fff)',
-                        },
-                        success: {
-                            duration: 3000,
-                            style: {
-                                background: 'var(--toast-success-bg, #10b981)',
-                                color: 'var(--toast-success-color, #fff)',
-                            },
-                        },
-                        error: {
-                            style: {
-                                background: 'var(--toast-error-bg, #ef4444)',
-                                color: 'var(--toast-error-color, #fff)',
-                            },
-                        },
-                    }}
                 />
             </div>
         </Layout>

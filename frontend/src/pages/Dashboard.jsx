@@ -76,15 +76,15 @@ export default function Dashboard() {
                         </Link>
 
                         <Link
-                            to="/transactions"
+                            to="/analytics"
                             className="flex items-center space-x-3 p-4 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                         >
                             <div className="p-2 bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-400 rounded-lg">
-                                <TrendingUp size={20} />
+                                <Activity size={20} />
                             </div>
                             <div>
                                 <h3 className="font-medium text-gray-900 dark:text-white">View Analytics</h3>
-                                <p className="text-sm text-gray-500 dark:text-gray-400">Analyze spending patterns</p>
+                                <p className="text-sm text-gray-500 dark:text-gray-400">Visual spending insights</p>
                             </div>
                         </Link>
                     </div>

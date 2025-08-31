@@ -9,8 +9,8 @@ export default function Profile() {
         return (
             <Layout>
                 <div className="p-6">
-                    <h2 className="text-lg font-medium">No user</h2>
-                    <p className="mt-2 text-sm text-gray-500">You are not logged in.</p>
+                    <h2 className="text-lg font-medium text-gray-900 dark:text-white">No user</h2>
+                    <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">You are not logged in.</p>
                 </div>
             </Layout>
         )
@@ -71,7 +71,7 @@ export default function Profile() {
                             <div className="space-x-2">
                                 <button
                                     onClick={handleCopyEmail}
-                                    className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg text-sm"
+                                    className="px-4 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white rounded-lg text-sm"
                                 >
                                     Copy Email
                                 </button>

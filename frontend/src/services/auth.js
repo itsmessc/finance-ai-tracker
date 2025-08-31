@@ -22,14 +22,18 @@ export function logout() {
 export async function refreshAccessToken() {
     const refreshToken = localStorage.getItem('refreshToken')
     if (!refreshToken) throw new Error('No refresh token')
-    const res = await fetch((import.meta.env.VITE_API_BASE || '') + '/auth/refresh', {
+    const res = await fetch((import.meta.env.VITE_API_BASE || 'http://localhost:4000') + '/auth/refresh', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ refreshToken }),
     })
-    if (!res.ok) throw new Error('Refresh failed')
+    if (!res.ok) {
+        // Clear invalid refresh token
+        localStorage.removeItem('refreshToken')
+        localStorage.removeItem('accessToken')
+        throw new Error('Refresh failed')
+    }
     const data = await res.json()
     localStorage.setItem('accessToken', data.accessToken)
-    // also update auth store via dispatch in caller
     return data.accessToken
 }
