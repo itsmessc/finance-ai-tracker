@@ -649,7 +649,7 @@ export default function Analytics() {
                         >
                             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Daily Spending Trend</h3>
                             <ResponsiveContainer width="100%" height={300}>
-                                <RechartsBarChart data={analyticsData.dailyData}>
+                                <RechartsLineChart data={analyticsData.dailyData}>
                                     <CartesianGrid strokeDasharray="3 3" stroke="#374151" opacity={0.3} />
                                     <XAxis
                                         dataKey="date"
@@ -661,8 +661,8 @@ export default function Analytics() {
                                         tickFormatter={(value) => `$${value.toFixed(0)}`}
                                     />
                                     <Tooltip content={<CustomTooltip />} />
-                                    <Bar dataKey="expense" fill="#EF4444" radius={[4, 4, 0, 0]} />
-                                </RechartsBarChart>
+                                    <Line type="monotone" dataKey="expense" stroke="#EF4444" strokeWidth={2} />
+                                </RechartsLineChart>
                             </ResponsiveContainer>
                         </motion.div>
                     )}
@@ -676,7 +676,7 @@ export default function Analytics() {
                         >
                             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Daily Income Trend</h3>
                             <ResponsiveContainer width="100%" height={300}>
-                                <RechartsBarChart data={analyticsData.dailyData}>
+                                <RechartsLineChart data={analyticsData.dailyData}>
                                     <CartesianGrid strokeDasharray="3 3" stroke="#374151" opacity={0.3} />
                                     <XAxis
                                         dataKey="date"
@@ -688,8 +688,8 @@ export default function Analytics() {
                                         tickFormatter={(value) => `$${value.toFixed(0)}`}
                                     />
                                     <Tooltip content={<CustomTooltip />} />
-                                    <Bar dataKey="income" fill="#10B981" radius={[4, 4, 0, 0]} />
-                                </RechartsBarChart>
+                                    <Line type="monotone" dataKey="income" stroke="#10B981" strokeWidth={2} />
+                                </RechartsLineChart>
                             </ResponsiveContainer>
                         </motion.div>
                     )}
