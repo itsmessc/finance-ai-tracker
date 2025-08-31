@@ -29,11 +29,11 @@ IMPORTANT DATE PARSING RULES:
 - "last month" → use: ${new Date(new Date().getFullYear(), new Date().getMonth() - 1, new Date().getDate()).toISOString().split('T')[0]}
 
 Examples:
-- "Spent 25 dollars on lunch at McDonald's" → {"amount": 25, "type": "debit", "category": "food", "description": "Lunch at McDonald's", "date": "${new Date().toISOString().split('T')[0]}", "tags": ["lunch", "fast food"], "location": "McDonald's"}
-- "Received salary of 3000 yesterday" → {"amount": 3000, "type": "credit", "category": "salary", "description": "Monthly salary", "date": "${new Date(Date.now() - 86400000).toISOString().split('T')[0]}", "tags": ["monthly", "income"]}
-- "Paid 50 for uber ride to airport 3 days ago" → {"amount": 50, "type": "debit", "category": "transport", "description": "Uber ride to airport", "date": "${new Date(Date.now() - 3 * 86400000).toISOString().split('T')[0]}", "tags": ["uber", "airport"], "location": "airport"}
-- "Bought groceries for 75 at Walmart last week" → {"amount": 75, "type": "debit", "category": "shopping", "description": "Groceries at Walmart", "date": "${new Date(Date.now() - 7 * 86400000).toISOString().split('T')[0]}", "tags": ["groceries"], "location": "Walmart"}
-- "I spent 4 yesterday" → {"amount": 4, "type": "debit", "category": "other", "description": "Expense", "date": "${new Date(Date.now() - 86400000).toISOString().split('T')[0]}", "tags": []}
+- "Spent 25 rupees on lunch at McDonald's" → {"amount": 25, "type": "debit", "category": "food", "description": "Lunch at McDonald's", "date": "${new Date().toISOString().split('T')[0]}", "tags": ["lunch", "fast food"], "location": "McDonald's"}
+- "Received salary of 50000 yesterday" → {"amount": 50000, "type": "credit", "category": "salary", "description": "Monthly salary", "date": "${new Date(Date.now() - 86400000).toISOString().split('T')[0]}", "tags": ["monthly", "income"]}
+- "Paid 800 for uber ride to airport 3 days ago" → {"amount": 800, "type": "debit", "category": "transport", "description": "Uber ride to airport", "date": "${new Date(Date.now() - 3 * 86400000).toISOString().split('T')[0]}", "tags": ["uber", "airport"], "location": "airport"}
+- "Bought groceries for 1200 at Big Bazaar last week" → {"amount": 1200, "type": "debit", "category": "shopping", "description": "Groceries at Big Bazaar", "date": "${new Date(Date.now() - 7 * 86400000).toISOString().split('T')[0]}", "tags": ["groceries"], "location": "Big Bazaar"}
+- "I spent 250 yesterday" → {"amount": 250, "type": "debit", "category": "other", "description": "Expense", "date": "${new Date(Date.now() - 86400000).toISOString().split('T')[0]}", "tags": []}
 
 Current date for reference: ${new Date().toISOString().split('T')[0]}
 Current time: ${new Date().toISOString()}

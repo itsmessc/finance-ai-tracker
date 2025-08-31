@@ -15,7 +15,7 @@ This project now includes comprehensive transaction management with AI-powered n
 
 ### AI-Powered Parsing
 - 🤖 Natural language transaction parsing using Gemini AI
-- 📝 Convert text like "Spent $25 on lunch at McDonald's" into structured data
+- 📝 Convert text like "Spent ₹250 on lunch at McDonald's" into structured data
 - 🎯 Automatic category detection
 - 📍 Location extraction
 - 🏷️ Smart tag generation

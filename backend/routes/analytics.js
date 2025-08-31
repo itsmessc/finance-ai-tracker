@@ -188,7 +188,7 @@ async function generateAIInsights(data) {
     if (topExpenseCategories.length > 0) {
         const highestCategory = topExpenseCategories[0];
         if (highestCategory.percentage > 30) {
-            savingsOpportunities = `Focus on your ${highestCategory.name} expenses - even a 10% reduction could save you $${(highestCategory.amount * 0.1).toFixed(2)} this period.`;
+            savingsOpportunities = `Focus on your ${highestCategory.name} expenses - even a 10% reduction could save you ₹${(highestCategory.amount * 0.1).toFixed(2)} this period.`;
         } else {
             savingsOpportunities = "Look for subscription services or recurring expenses that you might not be using actively.";
         }

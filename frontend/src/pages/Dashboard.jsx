@@ -18,9 +18,9 @@ export default function Dashboard() {
     }, [dispatch])
 
     const formatAmount = (amount, type) => {
-        const formattedAmount = new Intl.NumberFormat('en-US', {
+        const formattedAmount = new Intl.NumberFormat('en-IN', {
             style: 'currency',
-            currency: 'USD'
+            currency: 'INR'
         }).format(amount);
 
         return type === 'credit' ? `+${formattedAmount}` : `-${formattedAmount}`;

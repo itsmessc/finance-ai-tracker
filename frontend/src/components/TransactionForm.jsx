@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { motion } from 'framer-motion';
-import { Bot, DollarSign, Calendar, Tag, MapPin, Loader2, X, Check } from 'lucide-react';
+import { Bot, IndianRupee, Calendar, Tag, MapPin, Loader2, X, Check } from 'lucide-react';
 import { parseTransaction, createTransaction, clearParsedTransaction, clearError } from '../store/slices/transactionSlice';
 import toast from 'react-hot-toast';
 
@@ -198,7 +198,7 @@ const TransactionForm = ({ isOpen, onClose, transaction = null }) => {
                                 <textarea
                                     value={naturalText}
                                     onChange={(e) => setNaturalText(e.target.value)}
-                                    placeholder="e.g., 'Spent $25 on lunch at McDonald's' or 'Received $3000 salary'"
+                                    placeholder="e.g., 'Spent ₹250 on lunch at McDonald's' or 'Received ₹50000 salary'"
                                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                                     rows="3"
                                 />
@@ -236,7 +236,7 @@ const TransactionForm = ({ isOpen, onClose, transaction = null }) => {
                                 Amount *
                             </label>
                             <div className="relative">
-                                <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500" size={16} />
+                                <IndianRupee className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500" size={16} />
                                 <input
                                     type="number"
                                     step="0.01"

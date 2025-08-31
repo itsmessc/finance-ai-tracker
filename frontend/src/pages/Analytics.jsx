@@ -7,7 +7,7 @@ import {
     BarChart3,
     PieChart,
     Calendar,
-    DollarSign,
+    IndianRupee,
     Target,
     Activity,
     Brain,
@@ -254,9 +254,9 @@ export default function Analytics() {
 
     const formatCurrency = (amount) => {
         const numAmount = parseFloat(amount) || 0;
-        return new Intl.NumberFormat('en-US', {
+        return new Intl.NumberFormat('en-IN', {
             style: 'currency',
-            currency: 'USD'
+            currency: 'INR'
         }).format(numAmount);
     };
 
@@ -523,7 +523,7 @@ export default function Analytics() {
                                     {formatCurrency(analyticsData.totalIncome)}
                                 </p>
                             </div>
-                            <DollarSign className="h-8 w-8 text-green-600" />
+                            <IndianRupee className="h-8 w-8 text-green-600" />
                         </div>
                     </motion.div>
 
@@ -665,7 +665,7 @@ export default function Analytics() {
                                     />
                                     <YAxis
                                         tick={{ fill: '#6B7280', fontSize: 12 }}
-                                        tickFormatter={(value) => `$${value.toFixed(0)}`}
+                                        tickFormatter={(value) => `₹${value.toFixed(0)}`}
                                     />
                                     <Tooltip content={<CustomTooltip />} />
                                     <Line type="monotone" dataKey="expense" stroke="#EF4444" strokeWidth={2} />
@@ -692,7 +692,7 @@ export default function Analytics() {
                                     />
                                     <YAxis
                                         tick={{ fill: '#6B7280', fontSize: 12 }}
-                                        tickFormatter={(value) => `$${value.toFixed(0)}`}
+                                        tickFormatter={(value) => `₹${value.toFixed(0)}`}
                                     />
                                     <Tooltip content={<CustomTooltip />} />
                                     <Line type="monotone" dataKey="income" stroke="#10B981" strokeWidth={2} />
@@ -723,7 +723,7 @@ export default function Analytics() {
                                 />
                                 <YAxis
                                     tick={{ fill: '#6B7280', fontSize: 12 }}
-                                    tickFormatter={(value) => `$${value.toFixed(0)}`}
+                                    tickFormatter={(value) => `₹${value.toFixed(0)}`}
                                 />
                                 <Tooltip content={<CustomTooltip />} />
                                 <Legend />
@@ -771,7 +771,7 @@ export default function Analytics() {
                                 />
                                 <YAxis
                                     tick={{ fill: '#6B7280', fontSize: 12 }}
-                                    tickFormatter={(value) => `$${value.toFixed(0)}`}
+                                    tickFormatter={(value) => `₹${value.toFixed(0)}`}
                                 />
                                 <Tooltip content={<CustomTooltip />} />
                                 <Legend />
